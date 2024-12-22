@@ -27,9 +27,10 @@ import { recipeSchema } from '@/lib/validationSchema';
 import { generateRecipe } from './action/generateRecipe';
 
 export default function Home() {
-  const [recipe, setRecipe] = useState<z.infer<typeof recipeSchema> | null>(
-    null
-  );
+  const [recipe, setRecipe] = useState<{
+    recipe: z.infer<typeof recipeSchema>;
+    image: string;
+  } | null>(null);
   const [query, setQuery] = useState<RecipeConfig>({
     mealType: 'Dessert',
     people: 3,
@@ -70,11 +71,18 @@ export default function Home() {
             </h1>
 
             <h1 className={cn('text-4xl font-bold text-[#FF4D00]')}>
-              {recipe.name}
+              {recipe.recipe.name}
             </h1>
             <p className={cn('text-muted-foreground mb-4 mt-2')}>
-              {recipe.description}
+              {recipe.recipe.description}
             </p>
+
+            <div className='rounded-lg mb-4 overflow-hidden'>
+              <img
+                src={`data:image/png;base64,${recipe.image}`}
+                className='w-full object-cover max-h-[300px]'
+              />
+            </div>
 
             <div className='flex items-center justify-center gap-6 mb-4'>
               <p className='flex items-center gap-2 text-muted-foreground'>
@@ -83,7 +91,7 @@ export default function Home() {
               </p>
               <p className='flex items-center gap-2 text-muted-foreground'>
                 <Clock className='w-6 h-6' />
-                {recipe.timeInMinutes} minutes
+                {recipe.recipe.timeInMinutes} minutes
               </p>
               <p className='flex items-center gap-2 text-muted-foreground'>
                 <UserRound className='w-6 h-6' />
@@ -98,7 +106,7 @@ export default function Home() {
                 Ingredients
               </h2>
               <ul className='list-disc list-inside grid grid-cols-1 sm:grid-cols-2 gap-2 text-left'>
-                {recipe.ingredients.map((ingredient) => (
+                {recipe.recipe.ingredients.map((ingredient) => (
                   <li key={ingredient}>{ingredient}</li>
                 ))}
               </ul>
@@ -127,7 +135,7 @@ export default function Home() {
                 Instructions
               </h1>
               <ol className='list-decimal list-inside grid grid-cols-1 gap-2 text-left '>
-                {recipe.instructions.map((instruction) => (
+                {recipe.recipe.instructions.map((instruction) => (
                   <li key={instruction}>{instruction}</li>
                 ))}
               </ol>
@@ -139,7 +147,7 @@ export default function Home() {
                 Tips
               </h1>
               <ul className='list-disc list-inside grid grid-cols-1 gap-2 text-left '>
-                {recipe.tips.map((tip) => (
+                {recipe.recipe.tips.map((tip) => (
                   <li key={tip}>{tip}</li>
                 ))}
               </ul>

@@ -1,6 +1,10 @@
 'use server';
-import { generateObject } from 'ai';
+import {
+  generateObject,
+  experimental_generateImage as generateImage,
+} from 'ai';
 import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
 
 import { RecipeConfig } from '@/lib/type';
 import { recipeSchema } from '@/lib/validationSchema';
@@ -34,5 +38,25 @@ export const generateRecipe = async (query: RecipeConfig) => {
     schema: recipeSchema,
   });
 
-  return object;
+  const image = await generateRecipeImage(object);
+
+  return { recipe: object, image };
+};
+
+const generateRecipeImage = async (recipe: z.infer<typeof recipeSchema>) => {
+  const { image } = await generateImage({
+    model: openai.image('dall-e-3'),
+    prompt: `Create a realistic image of a finished dish named ${recipe.name}. 
+    The dish should reflect the description: ${recipe.description}. 
+    Use ingredients like ${recipe.ingredients} to create a visually appealing representation of the dish as it would appear when served. 
+    The setting should be simple yet elegant, focusing on the food. 
+    The dish should look fresh, garnished appropriately, and plated in a clean, inviting way. 
+    Ensure the colors and textures of the ingredients are visible and vibrant. 
+    The lighting should be soft and natural, enhancing the details of the dish. 
+    Keep the style consistent with high-quality food photography.`,
+    size: '1024x1024',
+    n: 1,
+  });
+
+  return image.base64;
 };
