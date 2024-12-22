@@ -26,6 +26,8 @@ import { DesiredFeeling } from '@/components/landing/DesiredFeeling';
 import { recipeSchema } from '@/lib/validationSchema';
 import { generateRecipe } from './action/generateRecipe';
 
+export const maxDuration = 60;
+
 export default function Home() {
   const [recipe, setRecipe] = useState<{
     recipe: z.infer<typeof recipeSchema>;
