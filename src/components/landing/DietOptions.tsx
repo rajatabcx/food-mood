@@ -28,6 +28,7 @@ export function DietOptions({
         <PopoverContent>
           {dietOptions.map((item) => (
             <Button
+              key={item}
               className='w-full justify-between'
               variant='ghost'
               onClick={() => {
@@ -63,7 +64,10 @@ export function DietOptions({
       </Popover>
       <div className='flex items-center gap-2'>
         {query.diet.map((diet) => (
-          <span className='bg-[#FF4D00] text-white font-medium rounded-md px-3 py-2'>
+          <span
+            key={diet}
+            className='bg-[#FF4D00] text-white font-medium rounded-md px-3 py-2'
+          >
             {diet}
           </span>
         ))}
